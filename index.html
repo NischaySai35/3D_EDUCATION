@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive 3D Educational Models</title>
+  <link rel="stylesheet" href="styles.css">
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Google Fonts (Roboto) -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Three.js and OrbitControls -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/OrbitControls.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.glTFLoader.min.js"></script>
+</head>
+<body>
+
+     <!-- Header Section -->
+  <div id="header">
+    Interactive 3D Educational Models
+    <span>Browse and interact with educational models in various fields</span>
+  </div>
+
+  <!-- Main Page (Field Selection) -->
+  <div id="main-page" class="container active">
+    <div class="main-content">
+      <!-- Search Bar on the Top -->
+      <div class="search-bar-container">
+        <h3>Search Fields</h3>
+        <div id="search-container">
+          <input type="text" id="search-field-bar" placeholder="Search for a field..." />
+          <button id="search-button" onclick="searchField()">Search</button>
+        </div>
+        <div id="loading"></div>
+        <div id="not-found-message">No field found. Please try again.</div>
+      </div>
+
+      <div class="field-items-container">
+        <div class="field-item" onclick="showFieldModels('biology')">
+          <div class="field-symbol">🧬</div>
+          <h4>Biology</h4>
+          <p class="field-description">Explore the study of living organisms, their structure, function, growth, evolution, and distribution.</p>
+        </div>
+        <div class="field-item" onclick="showFieldModels('chemistry')">
+          <div class="field-symbol">⚗️</div>
+          <h4>Chemistry</h4>
+          <p class="field-description">Dive into the science of matter, its properties, structure, reactions, and how they transform.</p>
+        </div>
+        <div class="field-item" onclick="showFieldModels('physics')">
+          <div class="field-symbol">⚡</div>
+          <h4>Physics</h4>
+          <p class="field-description">Understand the fundamental principles of nature, such as energy, force, motion, and the structure of matter.</p>
+        </div>
+        <div class="field-item" onclick="showFieldModels('technology')">
+          <div class="field-symbol">💻</div>
+          <h4>Technology</h4>
+          <p class="field-description">Learn about the application of scientific knowledge for practical purposes, especially in industry.</p>
+        </div>
+        <!-- New Electronics Field -->
+        <div class="field-item" onclick="showFieldModels('electronics')">
+          <div class="field-symbol">🔌</div>
+          <h4>Electronics</h4>
+          <p class="field-description">Learn about the design and application of electronic circuits, devices, and systems.</p>
+        </div>
+         <!-- New Automobiles Field -->
+        <div class="field-item" onclick="showFieldModels('automobiles')">
+          <div class="field-symbol">🚗</div>
+          <h4>Automobiles</h4>
+          <p class="field-description">Explore the world of cars, engines, and automotive design, focusing on functionality, technology, and innovation.</p>
+       </div>
+        <div class="field-item" onclick="showFieldModels('astronomy')">
+          <div class="field-symbol">🔭</div>
+          <h4>Astronomy</h4>
+          <p class="field-description">Explore the study of celestial objects, space, and the universe as a whole.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage for Model Selection -->
+  <div id="model-page" class="container">
+    <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
+    
+    <!-- Search Bar for Models (Placed Above Available Models Heading) -->
+    <div id="search-container">
+      <input type="text" id="search-model-bar" placeholder="Search for a model..." />
+      <button id="search-button" onclick="searchModel()">Search</button>
+    </div>
+
+    <!-- Heading for Available Models -->
+    <h2>Available Models</h2>
+    <div id="not-found-message">No models found. Please try again.</div>
+
+    <div class="field-item" onclick="showModel('model1')">Model 1</div>
+    <div class="field-item" onclick="showModel('model2')">Model 2</div>
+    <div class="field-item" onclick="showModel('model3')">Model 3</div>
+    <div class="field-item" onclick="showModel('model4')">Model 4</div>
+  </div>
+
+  <!-- Model Display Page -->
+  <div id="display-page" class="container">
+    <div class="back-button" onclick="backToModelPage()">Back to Models</div>
+    <div id="model-display">
+      <iframe id="model-viewer" src="" title="Model Viewer" alt="3D model" camera-controls auto-rotate background-color="#fff" style="width: 100%; height: 500px;"></iframe>
+      <div id="model-info">
+        <h3>Model Information</h3>
+        <p id="model-description">Here will be the model's description and educational content...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div id="footer">
+    &copy; 2025 3D Model Viewer | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+  <!-- Link to JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>
