@@ -17,7 +17,7 @@ let model; // Declare at the top
 
 // Load Model
 const loader = new GLTFLoader();
-loader.load("static/models/bike.glb", function (gltf) {
+loader.load("models/bike.glb", function (gltf) {
     model = gltf.scene;
     model.scale.set(3, 3, 3);
     scene.add(model);
@@ -46,7 +46,7 @@ scene.add(light);
 
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 const rgbeLoader = new RGBELoader();
-rgbeLoader.load('/static/studio.hdr', (texture) => {
+rgbeLoader.load('studio.hdr', (texture) => {
     const envMap = pmremGenerator.fromEquirectangular(texture).texture;
     scene.environment = envMap;  // Apply HDRI as environment
     //scene.background = envMap;   // If you want the HDR as background
