@@ -5,10 +5,11 @@ const { generateGeminiResponse } = require('../services/geminiService');
 const { Storage } = require('@google-cloud/storage');
 const multer = require('multer');
 const path = require('path');
+const MODELS_APIKEY = process.env.MODELS_KEYPATH;
 
 // Google Cloud Storage Configuration
-const storage = new Storage({ keyFilename: 'path/to/your/google-cloud-key.json' });
-const bucketName = 'your-google-cloud-bucket-name';
+const storage = new Storage({ keyFilename: MODELS_APIKEY });
+const bucketName = '3dmodels-bucket';
 const bucket = storage.bucket(bucketName);
 
 // Multer Storage for Handling File Uploads
