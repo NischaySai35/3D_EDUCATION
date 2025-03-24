@@ -20,14 +20,18 @@ const upload = multer({
 
 // API to Upload Model to Google Cloud Storage
 router.post('/upload', upload.single('modelFile'), async (req, res) => {
+    console.log("Received upload request");
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-        const modelName = req.body.name;
-        const fileExt = path.extname(req.file.originalname);
-        const fileName = `${modelName}-${Date.now()}${fileExt}`;
+        console.log("File received:", req.file.originalname);
+        console.log("Model name received:", req.body.name);
 
-        // Upload file to Google Cloud Storage
+        const modelName = req.body.name;
+        const folderName = "models"; // Change this to your desired folder
+        const fileExt = path.extname(req.file.originalname);
+        const fileName = `${folderName}/${modelName}-${Date.now()}${fileExt}`;
+
         const blob = bucket.file(fileName);
         const blobStream = blob.createWriteStream({
             resumable: false,
@@ -35,13 +39,12 @@ router.post('/upload', upload.single('modelFile'), async (req, res) => {
         });
 
         blobStream.on('finish', async () => {
-            await blob.makePublic();
             const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
 
-            // Save model details in MongoDB
             const newModel = new Model({ name: modelName, gcsUrl: publicUrl });
             await newModel.save();
 
+            console.log("Upload successful:", publicUrl);
             res.status(201).json({ message: 'Model uploaded successfully', modelUrl: publicUrl });
         });
 
@@ -95,7 +98,11 @@ router.get('/:modelName/info', async (req, res) => {
 // GET: Fetch explanation of a part using Gemini API
 router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     try {
+        console.log("🚀 Route hit: /:modelName/parts/:partName/explain");
         const { modelName, partName } = req.params;
+        
+        console.log(`Received modelName: ${modelName}, partName: ${partName}`);
+
         const prompt = `Explain the function of ${partName} in ${modelName}.`;
         const explanation = await generateGeminiResponse(prompt);
 
