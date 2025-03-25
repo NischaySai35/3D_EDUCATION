@@ -22,9 +22,32 @@ function searchField() {
   
   // Attach the searchField function to the input event for real-time search
   document.getElementById('search-field-bar').addEventListener('input', searchField);
+
+  // Search Functionality for Models
+function searchModel() {
+    const searchQuery = document.getElementById('search-model-bar').value.toLowerCase();
+    const modelItems = document.querySelectorAll('.field-item');
+    let found = false;
+  
+    modelItems.forEach(item => {
+      const modelName = item.textContent.toLowerCase();
+      if (modelName.includes(searchQuery)) {
+        item.style.display = 'block';
+        found = true;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.style.display = found ? 'none' : 'block';
+  }
+  
+  // Attach the searchField function to the input event for real-time search
+  document.getElementById('search-field-bar').addEventListener('input', searchField);
   
   // Function to send data to the backend using fetch
-  function sendToBackend(category) {
+function sendToBackend(category) {
     return fetch(`http://localhost:5000/api/category/${category}`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
@@ -40,97 +63,47 @@ function searchField() {
     });
 }
 
-
-  
   // Show models for a selected field
 function showFieldModels(field) {
-    // Hide main page and show model page
     document.getElementById('main-page').classList.remove('active');
     document.getElementById('model-page').classList.add('active');
     console.log('Sent to backend:', field);
 
-    // Send field name to backend as a string
+    // Send field information to the backend to fetch available models
     sendToBackend(field).then(response => {
         if (response.success) {
-            const models = response.models; // List of models from backend
-            const modelPage = document.getElementById('model-page');
+            const models = response.models; // List of models from the backend
+            const modelListContainer = document.getElementById('model-list');
 
-            console.log('Received models list from backend:', models);
+            console.log('Got models list from backend');
 
-            // Generate model items dynamically
-            const modelItems = models.map(model => `
-                <div class="field-item" onclick="showModel('${model.name}', '${field}')">
-                    <h4>${model.name.charAt(0).toUpperCase() + model.name.slice(1)}</h4>
-                </div>
-            `).join('');
+            // Clear existing model list before appending new ones
+            modelListContainer.innerHTML = '';
 
-            // Update the content of the model page
-            modelPage.innerHTML = `
-                <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
-                <div id="search-container">
-                    <input type="text" id="search-model-bar" placeholder="Search for a model..." />
-                    <button id="search-button" onclick="searchModel()">Search</button>
-                </div>
-                <h2>Available Models in ${field.charAt(0).toUpperCase() + field.slice(1)}</h2>
-                ${modelItems}
-            `;
+            // Dynamically generate model items
+            models.forEach(model => {
+                const modelItem = document.createElement('div');
+                modelItem.classList.add('field-item');
+                modelItem.innerHTML = `<h4>${model.name.charAt(0).toUpperCase() + model.name.slice(1)}</h4>`;
+                modelItem.onclick = () => showModel(model.name);
+                modelListContainer.appendChild(modelItem);
+            });
         } else {
-            console.log('Did not receive models list from backend.');
+            console.log('Did not receive models list from backend');
             alert('Error loading models for this field.');
         }
-    }).catch(error => {
-        console.error('Backend request failed:', error);
     });
 }
-  
-  // Show the selected model and display 3D model viewer with info
-  function showModel(modelName, field) {
-    sendToBackend({ model: modelName, field }).then(response => {
-      if (response.success) {
-        // Show the model and its details on the display page
-        console.log('got model and description from backend');
-        document.getElementById('model-viewer').src = response.model_url;
-        document.getElementById('model-description').innerText = response.description;
-        document.getElementById('model-page').classList.remove('active');
-        document.getElementById('display-page').classList.add('active');
-      } else {
-        console.log('did not got model and description from backend');
-        alert('Error loading model details.');
-      }
-    });
+ 
+  // Go back to the model selection page
+  function backToModelPage() {
+    document.getElementById('display-page').classList.remove('active');
+    document.getElementById('model-page').classList.add('active');
   }
   
-     // Go back to the model selection page
-      function backToModelPage() {
-        document.getElementById('display-page').classList.remove('active');
-        document.getElementById('model-page').classList.add('active');
-      }
+  // Go back to the main field selection page
+  function backToMainPage() {
+    document.getElementById('model-page').classList.remove('active');
+    document.getElementById('main-page').classList.add('active');
+  }
   
-      // Go back to the main field selection page
-      function backToMainPage() {
-        document.getElementById('model-page').classList.remove('active');
-        document.getElementById('main-page').classList.add('active');
-      }
-  
-      // Search Functionality for Models
-      function searchModel() {
-        const searchQuery = document.getElementById('search-model-bar').value.toLowerCase();
-        const modelItems = document.querySelectorAll('.field-item');
-        let found = false;
-  
-        modelItems.forEach(item => {
-          const modelName = item.textContent.toLowerCase();
-          if (modelName.includes(searchQuery)) {
-            item.style.display = 'block';
-            found = true;
-          } else {
-            item.style.display = 'none';
-          }
-        });
-  
-        document.getElementById('not-found-message').style.display = found ? 'none' : 'block';
-      
-        // After search, go back to the main page
-        document.getElementById('model-page').classList.remove('active'); // Hide model page if it is visible
-        document.getElementById('main-page').classList.add('active'); // Show the main page
-      }

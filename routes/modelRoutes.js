@@ -81,21 +81,18 @@ router.get('/:modelName', async (req, res) => {
     }
 });
 
-// GET: Fetch explanation of a part using Gemini API
-router.get('/:modelName/parts/:partName/explain', async (req, res) => {
+//GET model url for model viewewr viewer
+router.get('/getmodel/:modelName', async (req, res) => {
     try {
-        console.log("Route hit: /:modelName/parts/:partName/explain");
-        const { modelName, partName } = req.params;
-        
-        console.log(`Received modelName: ${modelName}, partName: ${partName}`);
+        const { modelName } = req.params;
+        const model = await Model.findOne({ name: modelName });
 
-        const prompt = `Explain the function of ${partName} in ${modelName}.`;
-        const explanation = await generateGeminiResponse(prompt);
+        if (!model) return res.status(404).json({ error: 'Model not found' });
 
-        res.status(200).json({ part: partName, explanation });
+        res.status(200).json({ gcsUrl: model.gcsUrl });
     } catch (err) {
-        console.error('Error generating explanation:', err);
-        res.status(500).json({ error: 'Failed to generate explanation' });
+        console.error('Error fetching model URL:', err);
+        res.status(500).json({ error: 'Failed to fetch model URL' });
     }
 });
 
@@ -114,6 +111,24 @@ router.get('/category/:category', async (req, res) => {
     } catch (err) {
         console.error('Error fetching models by category:', err);
         res.status(500).json({ error: 'Failed to fetch models' });
+    }
+});
+
+// GET: Fetch explanation of a part using Gemini API
+router.get('/:modelName/parts/:partName/explain', async (req, res) => {
+    try {
+        console.log("Route hit: /:modelName/parts/:partName/explain");
+        const { modelName, partName } = req.params;
+        
+        console.log(`Received modelName: ${modelName}, partName: ${partName}`);
+
+        const prompt = `Explain the function of ${partName} in ${modelName}.`;
+        const explanation = await generateGeminiResponse(prompt);
+
+        res.status(200).json({ part: partName, explanation });
+    } catch (err) {
+        console.error('Error generating explanation:', err);
+        res.status(500).json({ error: 'Failed to generate explanation' });
     }
 });
 

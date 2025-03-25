@@ -49,13 +49,11 @@
           <h4>Technology</h4>
           <p class="field-description">Learn about the application of scientific knowledge for practical purposes, especially in industry.</p>
         </div>
-        <!-- New Electronics Field -->
         <div class="field-item" onclick="showFieldModels('electronics')">
           <div class="field-symbol">🔌</div>
           <h4>Electronics</h4>
           <p class="field-description">Learn about the design and application of electronic circuits, devices, and systems.</p>
         </div>
-         <!-- New Automobiles Field -->
         <div class="field-item" onclick="showFieldModels('automobiles')">
           <div class="field-symbol">🚗</div>
           <h4>Automobiles</h4>
@@ -71,7 +69,19 @@
   </div>
 
   <!-- Subpage for Model Selection -->
-  <div id="model-page" class="container"></div>
+  <div id="model-page" class="container">
+    <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
+
+    <div id="search-container">
+        <input type="text" id="search-model-bar" placeholder="Search for a model..." />
+        <button id="search-button" onclick="searchModel()">Search</button>
+    </div>
+
+    <h2 id="model-title">Available Models</h2>
+
+    <!-- This is where models will be dynamically added -->
+    <div id="model-list"></div>
+</div>
 
   <!-- Model Display Page -->
   <div id="display-page" class="container">
@@ -92,5 +102,44 @@
 
   <!-- Link to JavaScript file -->
   <script src="app.js"></script>
+  <script>
+    let mvLoaded = false;
+  
+    function showModel(modelName) {
+        fetch(`http://localhost:5000/api/getmodel/${modelName}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.gcsUrl) {
+                    if (!mvLoaded) {
+                        // Dynamically load mv.js when first model is selected
+                        const script = document.createElement("script");
+                        script.src = "mv.js";
+                        script.type = "module";
+                        script.onload = () => {
+                            mvLoaded = true;
+                            loadModel(data.gcsUrl); // Call function from mv.js
+                        };
+                        document.body.appendChild(script);
+                    } else {
+                        loadModel(data.gcsUrl); // If mv.js is already loaded, just load model
+                    }
+                    document.getElementById('model-viewer-container').style.display = "block"; // Show the 3D viewer
+                } else {
+                    console.error("Model URL not found.");
+                }
+            })
+            .catch(error => console.error("Error loading model:", error));
+    }
+  
+    function hideModelViewer() {
+        document.getElementById('model-viewer-container').style.display = "none"; // Hide the 3D viewer
+    }
+  </script>
+  
+  <div id="model-viewer-container" style="display: none;">
+    <button onclick="hideModelViewer()">Close 3D Viewer</button>
+    <canvas id="model-canvas"></canvas>
+  </div>
+  
 </body>
 </html>
