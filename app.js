@@ -24,56 +24,64 @@ function searchField() {
   document.getElementById('search-field-bar').addEventListener('input', searchField);
   
   // Function to send data to the backend using fetch
-  function sendToBackend(data) {
-    return fetch('http://localhost:5000/api/send-field-data', {  // Adjust URL based on your backend server address
-      method: 'POST',  // Use POST request to send data to the backend
-      headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
-      },
-      body: JSON.stringify(data),  // Convert the data object to a JSON string
+  function sendToBackend(category) {
+    return fetch(`http://localhost:5000/api/category/${category}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-        .catch(error => {
-          console.error('Error sending data to backend:', error);
-          return { success: false, message: error.message };
-        });
-  }
+    .then(data => {
+        console.log("Backend response:", data);
+        return data;
+    })
+    .catch(error => {
+        console.error('Error sending request to backend:', error);
+        return { success: false, message: error.message };
+    });
+}
+
+
   
   // Show models for a selected field
-  function showFieldModels(field) {
+function showFieldModels(field) {
     // Hide main page and show model page
     document.getElementById('main-page').classList.remove('active');
     document.getElementById('model-page').classList.add('active');
-    console.log('senttobackend: %s',field);
+    console.log('Sent to backend:', field);
 
-    // Send field information to the backend to fetch available models
-    sendToBackend({ field }).then(response => {
-      if (response.success) {
-        const models = response.models; // List of models from the backend
-        const modelPage = document.getElementById('model-page');
-        
-        console.log('got models list from backend');
-        // Dynamically generate model items based on the backend response
-        modelPage.innerHTML = `
-          <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
-          <div id="search-container">
-            <input type="text" id="search-model-bar" placeholder="Search for a model..." />
-            <button id="search-button" onclick="searchModel()">Search</button>
-          </div>
-          <h2>Available Models in ${field.charAt(0).toUpperCase() + field.slice(1)}</h2>
-          ${models.map(model => `
-            <div class="field-item" onclick="showModel('${model.name}', '${field}')">
-              <h4>${model.name}</h4>
-              <p class="field-description">${model.description}</p>
-            </div>
-          `).join('')}
-        `;
-      } else {
-        console.log('did not got models list from backend');
-        alert('Error loading models for this field.');
-      }
+    // Send field name to backend as a string
+    sendToBackend(field).then(response => {
+        if (response.success) {
+            const models = response.models; // List of models from backend
+            const modelPage = document.getElementById('model-page');
+
+            console.log('Received models list from backend:', models);
+
+            // Generate model items dynamically
+            const modelItems = models.map(model => `
+                <div class="field-item" onclick="showModel('${model.name}', '${field}')">
+                    <h4>${model.name.charAt(0).toUpperCase() + model.name.slice(1)}</h4>
+                </div>
+            `).join('');
+
+            // Update the content of the model page
+            modelPage.innerHTML = `
+                <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
+                <div id="search-container">
+                    <input type="text" id="search-model-bar" placeholder="Search for a model..." />
+                    <button id="search-button" onclick="searchModel()">Search</button>
+                </div>
+                <h2>Available Models in ${field.charAt(0).toUpperCase() + field.slice(1)}</h2>
+                ${modelItems}
+            `;
+        } else {
+            console.log('Did not receive models list from backend.');
+            alert('Error loading models for this field.');
+        }
+    }).catch(error => {
+        console.error('Backend request failed:', error);
     });
-  }
+}
   
   // Show the selected model and display 3D model viewer with info
   function showModel(modelName, field) {

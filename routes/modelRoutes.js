@@ -100,16 +100,17 @@ router.get('/:modelName/parts/:partName/explain', async (req, res) => {
 });
 
 // GET: Fetch all models in a specific category
-router.get('/category/:categoryName', async (req, res) => {
+router.get('/category/:category', async (req, res) => {
     try {
-        const { categoryName } = req.params;
-        const models = await Model.find({ category: categoryName });
-
-        if (models.length === 0) {
-            return res.status(404).json({ error: 'No models found in this category' });
+        const category = req.params.category;
+        console.log('Received category request:', category); // Debugging
+        
+        const models = await Model.find({ category });
+        if (!models.length) {
+            return res.status(404).json({ success: false, error: 'No models found' });
         }
 
-        res.status(200).json(models);
+        res.status(200).json({ success: true, models });
     } catch (err) {
         console.error('Error fetching models by category:', err);
         res.status(500).json({ error: 'Failed to fetch models' });
