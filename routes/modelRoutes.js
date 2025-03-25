@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Model = require('../models/Model');
+const Model = require('../model');
 const { generateGeminiResponse } = require('../services/geminiService');
 const { Storage } = require('@google-cloud/storage');
 const multer = require('multer');
@@ -15,7 +15,7 @@ const bucket = storage.bucket(bucketName);
 // Multer Storage for Handling File Uploads
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 } // Max file size: 50MB
+    limits: { fileSize: 100 * 1024 * 1024 } // Max file size: 100MB
 });
 
 // API to Upload Model to Google Cloud Storage
@@ -26,8 +26,10 @@ router.post('/upload', upload.single('modelFile'), async (req, res) => {
 
         console.log("File received:", req.file.originalname);
         console.log("Model name received:", req.body.name);
+        console.log("Category received:", req.body.category);
 
         const modelName = req.body.name;
+        const category = req.body.category;
         const folderName = "models"; // Change this to your desired folder
         const fileExt = path.extname(req.file.originalname);
         const fileName = `${folderName}/${modelName}-${Date.now()}${fileExt}`;
@@ -40,8 +42,7 @@ router.post('/upload', upload.single('modelFile'), async (req, res) => {
 
         blobStream.on('finish', async () => {
             const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
-
-            const newModel = new Model({ name: modelName, gcsUrl: publicUrl });
+            const newModel = new Model({ name: modelName, category: category, gcsUrl: publicUrl });
             await newModel.save();
 
             console.log("Upload successful:", publicUrl);
@@ -80,21 +81,6 @@ router.get('/:modelName', async (req, res) => {
     }
 });
 
-// GET: Fetch basic model info (without parts) when model is opened
-router.get('/:modelName/info', async (req, res) => {
-    try {
-        const { modelName } = req.params;
-        const model = await Model.findOne({ name: modelName }).select('-parts'); // Exclude parts
-
-        if (!model) return res.status(404).json({ error: 'Model not found' });
-
-        res.status(200).json({ message: 'Model info fetched', data: model });
-    } catch (err) {
-        console.error('Error fetching model info:', err);
-        res.status(500).json({ error: 'Failed to fetch model information' });
-    }
-});
-
 // GET: Fetch explanation of a part using Gemini API
 router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     try {
@@ -127,33 +113,6 @@ router.get('/category/:categoryName', async (req, res) => {
     } catch (err) {
         console.error('Error fetching models by category:', err);
         res.status(500).json({ error: 'Failed to fetch models' });
-    }
-});
-
-// GET: Search for a model by name within a category
-router.get('/category/:categoryName/search', async (req, res) => {
-    try {
-        const { categoryName } = req.params;
-        const { name } = req.query; // Extract search query from request
-
-        if (!name) {
-            return res.status(400).json({ error: 'Model name query is required' });
-        }
-
-        // Perform case-insensitive search for models within the category
-        const models = await Model.find({
-            category: categoryName,
-            name: { $regex: new RegExp(name, 'i') } // Case-insensitive regex search
-        });
-
-        if (models.length === 0) {
-            return res.status(404).json({ error: 'No models found matching the search criteria' });
-        }
-
-        res.status(200).json(models);
-    } catch (err) {
-        console.error('Error searching models:', err);
-        res.status(500).json({ error: 'Failed to search models' });
     }
 });
 

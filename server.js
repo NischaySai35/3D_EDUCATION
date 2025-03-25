@@ -18,28 +18,10 @@ app.use(express.json());  // Alternative to body-parser
 connectDB();
 
 // Routes
-const modelRoutes = require('./routes/modelRoutes');
+const Routes = require('./routes/modelRoutes');
 const { generateGeminiResponse } = require('./services/geminiService');
 
-app.use('/api/models', modelRoutes);
-
-// API Route: Generate AI Explanation for 3D Models
-app.post('/api/gemini/generate', async (req, res) => {
-    try {
-        const { prompt } = req.body;
-
-        if (!prompt) {
-            return res.status(400).json({ error: 'Prompt is required' });
-        }
-
-        const generatedText = await generateGeminiResponse(prompt);
-
-        res.status(200).json({ generatedText });
-    } catch (err) {
-        console.error('Gemini API Error:', err.message);
-        res.status(500).json({ error: 'Failed to generate content', details: err.message });
-    }
-});
+app.use('/api', Routes);
 
 // Default route
 app.get('/', (req, res) => {
