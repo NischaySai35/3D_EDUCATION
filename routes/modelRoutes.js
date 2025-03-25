@@ -98,7 +98,7 @@ router.get('/:modelName/info', async (req, res) => {
 // GET: Fetch explanation of a part using Gemini API
 router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     try {
-        console.log("🚀 Route hit: /:modelName/parts/:partName/explain");
+        console.log("Route hit: /:modelName/parts/:partName/explain");
         const { modelName, partName } = req.params;
         
         console.log(`Received modelName: ${modelName}, partName: ${partName}`);
@@ -110,6 +110,50 @@ router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     } catch (err) {
         console.error('Error generating explanation:', err);
         res.status(500).json({ error: 'Failed to generate explanation' });
+    }
+});
+
+// GET: Fetch all models in a specific category
+router.get('/category/:categoryName', async (req, res) => {
+    try {
+        const { categoryName } = req.params;
+        const models = await Model.find({ category: categoryName });
+
+        if (models.length === 0) {
+            return res.status(404).json({ error: 'No models found in this category' });
+        }
+
+        res.status(200).json(models);
+    } catch (err) {
+        console.error('Error fetching models by category:', err);
+        res.status(500).json({ error: 'Failed to fetch models' });
+    }
+});
+
+// GET: Search for a model by name within a category
+router.get('/category/:categoryName/search', async (req, res) => {
+    try {
+        const { categoryName } = req.params;
+        const { name } = req.query; // Extract search query from request
+
+        if (!name) {
+            return res.status(400).json({ error: 'Model name query is required' });
+        }
+
+        // Perform case-insensitive search for models within the category
+        const models = await Model.find({
+            category: categoryName,
+            name: { $regex: new RegExp(name, 'i') } // Case-insensitive regex search
+        });
+
+        if (models.length === 0) {
+            return res.status(404).json({ error: 'No models found matching the search criteria' });
+        }
+
+        res.status(200).json(models);
+    } catch (err) {
+        console.error('Error searching models:', err);
+        res.status(500).json({ error: 'Failed to search models' });
     }
 });
 
