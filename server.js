@@ -4,6 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const connectDB = require('./db');
+const path = require('path');
+const open = require('open')
 
 // Initialize Express app
 const app = express();
@@ -22,13 +24,17 @@ const Routes = require('./routes/modelRoutes');
 const { generateGeminiResponse } = require('./services/geminiService');
 
 app.use('/api', Routes);
-
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname)));
 // Default route
 app.get('/', (req, res) => {
-    res.send('Server is running...');
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Start the server
+const { exec } = require('child_process');
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    exec(`start http://localhost:${port}`); // Windows
 });

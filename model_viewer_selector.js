@@ -29,7 +29,7 @@ export function initScene() {
     // HDRI
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const rgbeLoader = new RGBELoader();
-    rgbeLoader.load("studio.hdr", (texture) => {
+    rgbeLoader.load("models/studio.hdr", (texture) => {
         scene.environment = pmremGenerator.fromEquirectangular(texture).texture;
         texture.dispose();
     });
