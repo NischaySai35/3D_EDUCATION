@@ -7,7 +7,7 @@ let scene, camera, renderer, controls, model;
 let lastHovered = null;
 const originalMaterials = new Map();
 
-function initScene() {
+export function initScene() {
     if (scene) return;
 
     console.log("Initializing 3D scene...");
@@ -58,7 +58,7 @@ function initScene() {
     animate();
 }
 
-function loadModel(url) {
+export function loadModel(url) {
     initScene();
     if (model) {
         scene.remove(model);
@@ -66,6 +66,7 @@ function loadModel(url) {
     }
 
     const loader = new GLTFLoader();
+    console.log("Load function initiated, url =", url);
     loader.load(url, function (gltf) {
         model = gltf.scene;
         model.scale.set(3, 3, 3);
@@ -173,4 +174,3 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-export { loadModel };

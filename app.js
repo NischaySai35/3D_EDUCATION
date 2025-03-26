@@ -1,3 +1,5 @@
+import { loadModel } from './model_viewer_selector.js';
+
 // Function to handle search logic for fields
 function searchField() {
     const searchQuery = document.getElementById('search-field-bar').value.toLowerCase();
@@ -19,7 +21,7 @@ function searchField() {
     const notFoundMessage = document.getElementById('not-found-message');
     notFoundMessage.style.display = found ? 'none' : 'block';
   }
-  
+window.searchField=searchField;
   // Attach the searchField function to the input event for real-time search
   document.getElementById('search-field-bar').addEventListener('input', searchField);
 
@@ -42,7 +44,7 @@ function searchModel() {
     const notFoundMessage = document.getElementById('not-found-message');
     notFoundMessage.style.display = found ? 'none' : 'block';
   }
-  
+window.searchModel=searchModel;
   // Attach the searchField function to the input event for real-time search
   document.getElementById('search-field-bar').addEventListener('input', searchField);
   
@@ -62,6 +64,22 @@ function sendToBackend(category) {
         return { success: false, message: error.message };
     });
 }
+
+async function sendToBackendURL(modelName) {
+  try {
+      const response = await fetch(`http://localhost:5000/api/getmodel/${modelName}`);
+      if (!response.ok) {
+          throw new Error(`Failed to fetch model URL: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log("data is ",data.gcsUrl);
+      return data.gcsUrl; // Assuming the backend returns { "gcsUrl": "https://..." }
+  } catch (error) {
+      console.error("Error fetching model URL:", error);
+      return null;
+  }
+}
+
 
   // Show models for a selected field
 function showFieldModels(field) {
@@ -85,7 +103,26 @@ function showFieldModels(field) {
                 const modelItem = document.createElement('div');
                 modelItem.classList.add('field-item');
                 modelItem.innerHTML = `<h4>${model.name.charAt(0).toUpperCase() + model.name.slice(1)}</h4>`;
-                modelItem.onclick = () => showModel(model.name);
+                modelItem.onclick = () => {
+                  console.log(`Model selected: ${model.name}`);
+                  
+                  // Show display page and hide model selection page
+                  document.getElementById('model-page').classList.remove('active');
+                  document.getElementById('display-page').classList.add('active');
+          
+                  // Fetch model URL and load it
+                  sendToBackendURL(model.name).then(modelUrl => {
+                    if (modelUrl) {
+                        console.log("Fetched Model URL:", modelUrl);
+                        loadModel(modelUrl); // Load the model
+                    } else {
+                        console.error("Error fetching model URL");
+                    }
+                }).catch(error => {
+                    console.error("Error in fetching model URL:", error);
+                });
+                
+              };
                 modelListContainer.appendChild(modelItem);
             });
         } else {
@@ -94,16 +131,16 @@ function showFieldModels(field) {
         }
     });
 }
- 
+window.showFieldModels = showFieldModels;
   // Go back to the model selection page
   function backToModelPage() {
     document.getElementById('display-page').classList.remove('active');
     document.getElementById('model-page').classList.add('active');
   }
-  
+window.backToModelPage=backToModelPage;
   // Go back to the main field selection page
   function backToMainPage() {
     document.getElementById('model-page').classList.remove('active');
     document.getElementById('main-page').classList.add('active');
   }
-  
+window.backToMainPage=backToMainPage;
