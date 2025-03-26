@@ -80,13 +80,17 @@
         <!-- Left Side: Model Information -->
         <div id="model-info">
             <h3>Model Information</h3>
-            <p id="model-description">Select a part to see its details...</p>
+            <p id="explanation">Select a part to see its details...</p>
         </div>
 
-        <!-- Right Side: 3D Model Interaction -->
-        <div id="model-viewer-container">
-            <canvas id="model-canvas"></canvas> <!-- Three.js renders here -->
-        </div>
+      <!-- Right Side: 3D Model Interaction -->
+      <div id="model-viewer-container">
+        <canvas id="model-canvas"></canvas> <!-- Three.js renders here -->
+      </div>
+      <!-- Tooltip for part name (placed outside to avoid absolute positioning issues) -->
+      <div id="part-name" 
+        style="position: absolute; color: black; font-size: 18px; background: rgba(255, 255, 255, 0.7); padding: 5px; display: none;">
+      </div>
     </div>
 </div>
 

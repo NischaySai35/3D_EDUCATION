@@ -122,7 +122,7 @@ router.get('/:modelName/parts/:partName/explain', async (req, res) => {
         
         console.log(`Received modelName: ${modelName}, partName: ${partName}`);
 
-        const prompt = `Explain the function of ${partName} in ${modelName}.`;
+        const prompt = `Explain the function of ${partName} in ${modelName} in 6 headings and description.`;
         const explanation = await generateGeminiResponse(prompt);
 
         res.status(200).json({ part: partName, explanation });

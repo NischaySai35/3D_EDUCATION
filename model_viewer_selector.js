@@ -5,16 +5,19 @@ import { RGBELoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/RG
 
 let scene, camera, renderer, controls, model;
 let lastHovered = null;
+let currentModelName = null;
 const originalMaterials = new Map();
 
-export function initScene() {
+function initScene() {
     if (scene) return;
 
     console.log("Initializing 3D scene...");
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("model-canvas") });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const container = document.getElementById("model-viewer-container");
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    
     scene.background = new THREE.Color(0xffffff);
 
     document.getElementById("model-viewer-container").appendChild(renderer.domElement);
@@ -45,20 +48,21 @@ export function initScene() {
     controls.rotateSpeed = 0.5;
     controls.panSpeed = 1;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.3;
+    controls.autoRotateSpeed = 0.4;
 
     window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const container = document.getElementById("model-viewer-container");
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    });    
 
     window.addEventListener("mousemove", onHover);
-    window.addEventListener("click", onClick);
+    document.getElementById("model-viewer-container").addEventListener("click", onClick);
     animate();
 }
 
-export function loadModel(url) {
+export function loadModel(url, modelName) {
     initScene();
     if (model) {
         scene.remove(model);
@@ -71,7 +75,8 @@ export function loadModel(url) {
         model = gltf.scene;
         model.scale.set(3, 3, 3);
         scene.add(model);
-        console.log("Model loaded:", model);
+        currentModelName = modelName;  
+        console.log("Loaded model:", modelName);
 
         // Adjust camera
         const bbox = new THREE.Box3().setFromObject(model);
@@ -115,9 +120,10 @@ function onHover(event) {
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
     const partNameDiv = document.getElementById("part-name");
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const container = document.getElementById("model-viewer-container");
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(model, true);
@@ -135,11 +141,15 @@ function onHover(event) {
 
         hoveredPart.material = outlineMaterial;
         lastHovered = hoveredPart;
+        // Extract part name and remove numbers
+        let partName = hoveredPart.name.replace(/\d+/g, '').trim() || "Unknown Part";
+
+        partNameDiv.innerText = partName;
 
         // Show part name tooltip
-        partNameDiv.innerText = hoveredPart.name || "Unknown Part";
-        partNameDiv.style.left = event.clientX + "px";
-        partNameDiv.style.top = event.clientY + "px";
+        partNameDiv.innerText = partName;
+        partNameDiv.style.left = `${event.clientX + 10}px`;
+        partNameDiv.style.top = `${event.clientY - 20}px`;
         partNameDiv.style.display = "block";
     } else {
         if (lastHovered) {
@@ -150,20 +160,39 @@ function onHover(event) {
     }
 }
 
-function onClick() {
-    if (lastHovered && currentModelName) {  
-        const partName = lastHovered.name || "Unknown Part";
+function onClick(event) {
+    if (!model || !currentModelName) return;
+
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+
+    // Get the mouse position relative to the canvas
+    const container = document.getElementById("model-viewer-container");
+    const rect = container.getBoundingClientRect();
+
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(model, true);
+
+    if (intersects.length > 0) {
+        const clickedPart = intersects[0].object;
+        const partName = clickedPart.name.replace(/\d+/g, '').trim() || "Unknown Part";
+
         console.log(`Clicked on part: ${partName} of model: ${currentModelName}`);
 
-        fetch(`/${currentModelName}/${partName}/explain`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-        }) // Send to backend
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("explanation").innerText = data.explanation;
-            })
-            .catch(error => console.error("Error fetching explanation:", error));
+        // Fetch explanation from backend
+        fetch(`/api/${currentModelName}/parts/${partName}/explain`)
+        .then(response => response.json())
+        .then(data => {
+            let explanation = data.explanation;
+            explanation = explanation.replace(/\n/g, "<br>") // Convert `\n` to `<br>` for new lines
+                                     .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Convert `**bold**` to `<b>bold</b>`
+                                     .replace(/\*(.*?)\*/g, "<i>$1</i>"); // Convert `*italic*` to `<i>italic</i>`
+            document.getElementById("explanation").innerHTML = explanation;
+        })
+        .catch(error => console.error("Error fetching explanation:", error));
     }
 }
 

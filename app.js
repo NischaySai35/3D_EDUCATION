@@ -114,7 +114,7 @@ function showFieldModels(field) {
                   sendToBackendURL(model.name).then(modelUrl => {
                     if (modelUrl) {
                         console.log("Fetched Model URL:", modelUrl);
-                        loadModel(modelUrl); // Load the model
+                        loadModel(modelUrl, model.name); // Load the model
                     } else {
                         console.error("Error fetching model URL");
                     }
