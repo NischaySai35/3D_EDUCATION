@@ -6,13 +6,12 @@
   <title>Interactive 3D Educational Models</title>
   <link rel="stylesheet" href="styles.css">
 
-</head>
 <body>
-     <!-- Header Section -->
-  <div id="header">
-    Interactive 3D Educational Models
+  <!-- Header Section -->
+  <header id="header">
+    <h1>Interactive 3D Educational Models</h1>
     <span>Browse and interact with educational models in various fields</span>
-  </div>
+  </header>
 
   <!-- Main Page (Field Selection) -->
   <div id="main-page" class="container active">
@@ -21,87 +20,107 @@
       <div class="search-bar-container">
         <h3>Search Fields</h3>
         <div id="search-container">
-          <input type="text" id="search-field-bar" placeholder="Search for a field..." />
+          <input 
+            type="text" 
+            id="search-field-bar" 
+            placeholder="Search for a field..." 
+            aria-label="Search for a field"
+          />
           <button id="search-button" onclick="searchField()">Search</button>
         </div>
-        <div id="loading"></div>
-        <div id="not-found-message">No field found. Please try again.</div>
+        <div id="loading" style="display: none;">Searching...</div>
+        <div id="not-found-message" style="display: none;">No field found. Please try again.</div>
       </div>
 
-      <div class="field-items-container">
+      <!-- Fields Section -->
+      <section class="field-items-container">
         <div class="field-item" onclick="showFieldModels('biology')">
           <div class="field-symbol">🧬</div>
           <h4>Biology</h4>
-          <p class="field-description">Explore the study of living organisms, their structure, function, growth, evolution, and distribution.</p>
+          <p class="field-description">
+            Explore the study of living organisms, their structure, function, growth, evolution, and distribution.
+          </p>
         </div>
+
         <div class="field-item" onclick="showFieldModels('technology')">
           <div class="field-symbol">💻</div>
           <h4>Technology</h4>
-          <p class="field-description">Learn about the application of scientific knowledge for practical purposes, especially in industry.</p>
+          <p class="field-description">
+            Learn about the application of scientific knowledge for practical purposes, especially in industry.
+          </p>
         </div>
+
         <div class="field-item" onclick="showFieldModels('electronics')">
           <div class="field-symbol">🔌</div>
           <h4>Electronics</h4>
-          <p class="field-description">Learn about the design and application of electronic circuits, devices, and systems.</p>
+          <p class="field-description">
+            Learn about the design and application of electronic circuits, devices, and systems.
+          </p>
         </div>
+
         <div class="field-item" onclick="showFieldModels('automobiles')">
           <div class="field-symbol">🚗</div>
           <h4>Automobiles</h4>
-          <p class="field-description">Explore the world of cars, engines, and automotive design, focusing on functionality, technology, and innovation.</p>
-       </div>
+          <p class="field-description">
+            Explore the world of cars, engines, and automotive design, focusing on functionality, technology, and innovation.
+          </p>
+        </div>
+
         <div class="field-item" onclick="showFieldModels('astronomy')">
           <div class="field-symbol">🔭</div>
           <h4>Astronomy</h4>
-          <p class="field-description">Explore the study of celestial objects, space, and the universe as a whole.</p>
+          <p class="field-description">
+            Explore the study of celestial objects, space, and the universe as a whole.
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 
   <!-- Subpage for Model Selection -->
-  <div id="model-page" class="container">
+  <section id="model-page" class="container">
     <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
 
-    <div id="search-container">
-        <input type="text" id="search-model-bar" placeholder="Search for a model..." />
-        <button id="search-button" onclick="searchModel()">Search</button>
+    <div id="model-search-container">
+      <input type="text" id="search-model-bar" placeholder="Search for a model..." />
+      <button id="search-button" onclick="searchModel()">Search</button>
     </div>
 
     <h2 id="model-title">Available Models</h2>
 
-    <!-- This is where models will be dynamically added -->
+    <!-- Dynamic Model List -->
     <div id="model-list"></div>
-</div>
+  </section>
 
   <!-- Model Display Page -->
-  <div id="display-page" class="container">
+  <section id="display-page" class="container">
     <div class="back-button" onclick="backToModelPage()">Back to Models</div>
     <div id="model-display">
-        <!-- Left Side: Model Information -->
-        <div id="model-info">
-            <h3>Model Information</h3>
-            <p id="explanation">Select a part to see its details...</p>
-        </div>
+      <!-- Left Side: Model Information -->
+      <div id="model-info">
+        <h3>Model Information</h3>
+        <p id="explanation">Select a part to see its details...</p>
+      </div>
 
       <!-- Right Side: 3D Model Interaction -->
       <div id="model-viewer-container">
         <canvas id="model-canvas"></canvas> <!-- Three.js renders here -->
       </div>
-      <!-- Tooltip for part name (placed outside to avoid absolute positioning issues) -->
-      <div id="part-name" 
-        style="position: absolute; color: black; font-size: 18px; background: rgba(255, 255, 255, 0.7); padding: 5px; display: none;">
-      </div>
     </div>
-</div>
+
+    <!-- Tooltip for Part Name -->
+    <div id="part-name" class="tooltip">
+      <span id="tooltip-text"></span>
+    </div>
+  </section>
 
   <!-- Footer Section -->
-  <div id="footer">
+  <footer id="footer">
     &copy; 2025 3D Model Viewer | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-  </div>
+  </footer>
 
-  <!-- Link to JavaScript file -->
+  <!-- Link to JavaScript files -->
   <script type="module" src="model_viewer_selector.js"></script>
   <script type="module" src="app.js"></script>
-  
 </body>
 </html>

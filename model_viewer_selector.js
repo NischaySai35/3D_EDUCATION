@@ -6,6 +6,7 @@ import { RGBELoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/RG
 let scene, camera, renderer, controls, model;
 let lastHovered = null;
 let currentModelName = null;
+let time = 0;
 const originalMaterials = new Map();
 
 function initScene() {
@@ -16,11 +17,11 @@ function initScene() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("model-canvas") });
     const container = document.getElementById("model-viewer-container");
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    renderer.setSize(width, height);
     
     scene.background = new THREE.Color(0xffffff);
-
-    document.getElementById("model-viewer-container").appendChild(renderer.domElement);
 
     // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 1.0));
@@ -45,7 +46,7 @@ function initScene() {
     controls.zoomSpeed = 3.0;
     controls.minDistance = 2;
     controls.maxDistance = 50;
-    controls.rotateSpeed = 0.5;
+    controls.rotateSpeed = 0.8;
     controls.panSpeed = 1;
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.4;
@@ -55,14 +56,17 @@ function initScene() {
         renderer.setSize(container.clientWidth, container.clientHeight);
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
-    });    
-
+    });
     window.addEventListener("mousemove", onHover);
     document.getElementById("model-viewer-container").addEventListener("click", onClick);
     animate();
 }
 
 export function loadModel(url, modelName) {
+    setTimeout(() => {
+        if (document.getElementById("model-viewer-container").clientWidth > 0) {
+            console.log("Took : ",time,"ms");
+    document.getElementById("explanation").innerText = "Select a part to see its details...";  
     initScene();
     if (model) {
         scene.remove(model);
@@ -73,24 +77,29 @@ export function loadModel(url, modelName) {
     console.log("Load function initiated, url =", url);
     loader.load(url, function (gltf) {
         model = gltf.scene;
-        model.scale.set(3, 3, 3);
         scene.add(model);
         currentModelName = modelName;  
         console.log("Loaded model:", modelName);
 
-        // Adjust camera
         const bbox = new THREE.Box3().setFromObject(model);
         const center = bbox.getCenter(new THREE.Vector3());
         const size = bbox.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
+        
         const fov = camera.fov * (Math.PI / 180);
-        let cameraDistance = Math.abs(maxDim / Math.sin(fov / 2));
-
-        camera.position.set(center.x, center.y, cameraDistance);
-        camera.lookAt(center);
+        let cameraDistance = Math.abs(maxDim / (2 * Math.tan(fov / 2))); // ✅ Correct formula
+    
+        model.position.sub(center);
+        camera.position.set(0, 0, cameraDistance * 1.5); // 1.5 to avoid clipping
+        camera.lookAt(0, 0, 0);
         controls.target.copy(center);
         controls.update();
     });
+} else {
+    time = time + 100;
+    loadModel(url, modelName); // Try again
+}
+}, 100);
 }
 
 // Shader-based outline effect
@@ -196,10 +205,8 @@ function onClick(event) {
     }
 }
 
-
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
 }
-
