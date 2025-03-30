@@ -44,8 +44,8 @@ function initScene() {
     controls.dampingFactor = 0.1;
     controls.screenSpacePanning = true;
     controls.zoomSpeed = 3.0;
-    controls.minDistance = 2;
-    controls.maxDistance = 50;
+    controls.minDistance = 0.3;
+    controls.maxDistance = 15;
     controls.rotateSpeed = 0.8;
     controls.panSpeed = 1;
     controls.autoRotate = true;
@@ -64,36 +64,36 @@ function initScene() {
 
 export function loadModel(url, modelName) {
     setTimeout(() => {
-        if (document.getElementById("model-viewer-container").clientWidth > 0) {
-            console.log("Took : ",time,"ms");
-    document.getElementById("explanation").innerText = "Select a part to see its details...";  
-    initScene();
-    if (model) {
-        scene.remove(model);
-        model = null;
-    }
+    if (document.getElementById("model-viewer-container").clientWidth > 0) {
+        console.log("Took : ",time,"ms");
+        document.getElementById("explanation").innerText = "Select a part to see its details...";  
+        initScene();
+        if (model) {
+            scene.remove(model);
+            model = null;
+        }
 
-    const loader = new GLTFLoader();
-    console.log("Load function initiated, url =", url);
-    loader.load(url, function (gltf) {
-        model = gltf.scene;
-        scene.add(model);
-        currentModelName = modelName;  
-        console.log("Loaded model:", modelName);
+        const loader = new GLTFLoader();
+        console.log("Load function initiated, url =", url);
+        loader.load(url, function (gltf) {
+            model = gltf.scene;
+            scene.add(model);
+            currentModelName = modelName;  
+            console.log("Loaded model:", modelName);
+            console.log("size : ",model.size);
 
-        const bbox = new THREE.Box3().setFromObject(model);
-        const center = bbox.getCenter(new THREE.Vector3());
-        const size = bbox.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraDistance = Math.abs(maxDim / (2 * Math.tan(fov / 2))); // ✅ Correct formula
-    
-        model.position.sub(center);
-        camera.position.set(0, 0, cameraDistance * 1.5); // 1.5 to avoid clipping
-        camera.lookAt(0, 0, 0);
-        controls.target.copy(center);
-        controls.update();
+            const bbox = new THREE.Box3().setFromObject(model);
+            const center = bbox.getCenter(new THREE.Vector3());
+            const size = bbox.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = camera.fov * (Math.PI / 180);
+            
+            let cameraDistance = Math.abs(maxDim / (2 * Math.sin(fov / 2)));
+
+            model.position.set(-center.x, -center.y, -center.z);
+            const frontOffset = cameraDistance + maxDim * 0.2;
+            camera.position.set(0, 0, frontOffset);
+            controls.update();
     });
 } else {
     time = time + 100;
