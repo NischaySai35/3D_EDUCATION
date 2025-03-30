@@ -19,7 +19,10 @@ function initScene() {
     const container = document.getElementById("model-viewer-container");
     const width = container.clientWidth;
     const height = container.clientHeight;
-    renderer.setSize(width, height);
+    const size = Math.min(width, height);
+    renderer.setSize(size, size);
+    camera.aspect = 1;
+    camera.updateProjectionMatrix();
     
     scene.background = new THREE.Color(0xffffff);
 
@@ -45,7 +48,7 @@ function initScene() {
     controls.screenSpacePanning = true;
     controls.zoomSpeed = 3.0;
     controls.minDistance = 0.3;
-    controls.maxDistance = 15;
+    controls.maxDistance = 50;
     controls.rotateSpeed = 0.8;
     controls.panSpeed = 1;
     controls.autoRotate = true;
@@ -53,8 +56,11 @@ function initScene() {
 
     window.addEventListener("resize", () => {
         const container = document.getElementById("model-viewer-container");
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        camera.aspect = container.clientWidth / container.clientHeight;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        const size = Math.min(width, height);
+        renderer.setSize(size, size);
+        camera.aspect = 1;
         camera.updateProjectionMatrix();
     });
     window.addEventListener("mousemove", onHover);
@@ -87,7 +93,7 @@ export function loadModel(url, modelName) {
             const size = bbox.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
             const fov = camera.fov * (Math.PI / 180);
-            
+
             let cameraDistance = Math.abs(maxDim / (2 * Math.sin(fov / 2)));
 
             model.position.set(-center.x, -center.y, -center.z);
