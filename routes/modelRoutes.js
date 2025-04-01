@@ -122,9 +122,7 @@ router.get('/:modelName/parts/:partName/explain', async (req, res) => {
         
         console.log(`Received modelName: ${modelName}, partName: ${partName}`);
 
-        const prompt = `Explain the function, structure and importance of ${partName} in ${modelName}.Descrie how it
-        interact with other parts of the model and its role in real world applications. Keep the explanation detailed
-        yet simple enough for general understanding, using technical terms where necessary while ensuring clarity. `;
+        const prompt = `Explain the ${partName} of the ${modelName} in 5 points.`;
         const explanation = await generateGeminiResponse(prompt);
 
         res.status(200).json({ part: partName, explanation });
