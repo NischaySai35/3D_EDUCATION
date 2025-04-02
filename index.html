@@ -9,12 +9,14 @@
 <body>
   <!-- Header Section -->
   <header id="header">
-    <h1>Interactive 3D Educational Models</h1>
-    <span>Browse and interact with educational models in various fields</span>
+    <img src="./models/bg1.png" alt="Header Image" id="headerImage">
   </header>
 
   <!-- Main Page (Field Selection) -->
   <div id="main-page" class="container active">
+    <h1 style="font-size: 2.5em; font-weight: bold;">Interactive 3D Educational Models</h1>
+    <p style="font-size: 1.2em;">Browse and interact with educational models across various fascinating fields</p>
+
     <div class="main-content">
       <!-- Search Bar on the Top -->
       <div class="search-bar-container">
@@ -94,7 +96,7 @@
       <button id="search-button" onclick="searchModel()">Search</button>
     </div>
 
-    <h2 id="model-title">Available Models</h2>
+    <h2 id="model-title" style="padding-top: 20px;">Available Models</h2>
 
     <!-- Dynamic Model List -->
     <div id="model-list"></div>
@@ -112,19 +114,44 @@
 
       <!-- Right Side: 3D Model Interaction -->
       <div id="model-viewer-container">
-        <canvas id="model-canvas"></canvas> <!-- Three.js renders here -->
+        <canvas id="model-canvas"></canvas>
+        <div id="part-name">Hover over the parts to know more...</div>
       </div>
     </div>
-
-    <!-- Tooltip for Part Name -->
-    <div id="part-name" class="tooltip">
-      <span id="tooltip-text"></span>
-    </div>
+    
   </section>
 
   <!-- Footer Section -->
   <footer id="footer">
-    &copy; 2025 3D Model Viewer | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+    <div class="footer-container">
+      <!-- Contributions -->
+      <div class="footer-section">
+        <h4>Designed By</h4>
+        <p>Nischay Sai</p>
+        <p>Rishika J R</p>
+        <p>Noti Gayatri</p>
+      </div>
+  
+      <!-- Contact Info -->
+      <div class="footer-section">
+        <h4>Contact Us</h4>
+        <p>Email: nischaysai35@gmail.com</p>
+        <p>Phone: +91 8147447343</p>
+      </div>
+  
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h4>Our Project Links</h4>
+        <ul>
+          <li><a href="#" style="text-decoration: underline;">Youtube Link</a></li>
+          <a href="https://github.com/NischaySai35/3D_EDUCATION" target="_blank" style="text-decoration: underline;">GitHub Link</a>
+          <li><a href="#" style="text-decoration: underline;">References Used</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 3D Model Viewer | Only for GDG Solution Challenge ROUND-1
+    </div>
   </footer>
 
   <!-- Link to JavaScript files -->

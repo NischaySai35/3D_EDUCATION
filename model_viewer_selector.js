@@ -23,8 +23,7 @@ function initScene() {
     renderer.setSize(size, size);
     camera.aspect = 1;
     camera.updateProjectionMatrix();
-    
-    scene.background = new THREE.Color(0xffffff);
+    scene.background = new THREE.Color(0x000000);
 
     // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 1.0));
@@ -72,7 +71,7 @@ export function loadModel(url, modelName) {
     setTimeout(() => {
     if (document.getElementById("model-viewer-container").clientWidth > 0) {
         console.log("Took : ",time,"ms");
-        document.getElementById("explanation").innerText = "Select a part to see its details...";  
+        document.getElementById("explanation").innerText = "Click on a part to know more...";  
         initScene();
         if (model) {
             scene.remove(model);
@@ -97,7 +96,8 @@ export function loadModel(url, modelName) {
             let cameraDistance = Math.abs(maxDim / (2 * Math.sin(fov / 2)));
 
             model.position.set(-center.x, -center.y, -center.z);
-            const frontOffset = cameraDistance + maxDim * 0.2;
+            console.log("maxdim is ", maxDim);
+            const frontOffset = cameraDistance;
             camera.position.set(0, 0, frontOffset);
             controls.update();
     });
@@ -159,19 +159,15 @@ function onHover(event) {
         // Extract part name and remove numbers
         let partName = hoveredPart.name.replace(/\d+/g, '').trim() || "Unknown Part";
 
-        partNameDiv.innerText = partName;
-
-        // Show part name tooltip
-        partNameDiv.innerText = partName;
-        partNameDiv.style.left = `${event.clientX + 10}px`;
-        partNameDiv.style.top = `${event.clientY - 20}px`;
-        partNameDiv.style.display = "block";
+        partNameDiv.innerText = `Part name: ${partName}`;
+        partNameDiv.classList.add("active");
     } else {
         if (lastHovered) {
             lastHovered.material = originalMaterials.get(lastHovered);
             lastHovered = null;
         }
-        partNameDiv.style.display = "none";
+        partNameDiv.innerText = "Hover over the parts to know more...";
+        partNameDiv.classList.remove("active");
     }
 }
 
