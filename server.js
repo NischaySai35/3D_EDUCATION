@@ -38,5 +38,9 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 
     // Open the URL in the default browser
-    open(`http://localhost:${port}`).catch(err => console.error("Error opening browser:", err));
+    exec(`start http://localhost:${port}`, (err) => {
+        if (err) {
+            console.error("Error opening browser:", err);
+        }
+    });
 });
