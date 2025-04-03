@@ -50,6 +50,14 @@ function fadeOut(element, callback) {
   }, 50);
 }
 
+function adjustModelInfoHeight() {
+  const modelviewer = document.getElementById("model-viewer-container");
+  const modelInfo = document.getElementById("model-info");
+  const modelheight = modelviewer.offsetHeight;
+  modelInfo.style.maxHeight = `${modelheight}px`;
+}
+window.addEventListener("resize", adjustModelInfoHeight);
+
 /* 🔍 Live Search Filtering */
 function setupSearchFilters() {
   document.getElementById("search-field-bar").addEventListener("input", searchField);
