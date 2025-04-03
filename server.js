@@ -24,11 +24,11 @@ const { generateGeminiResponse } = require('./services/geminiService');
 app.use('/api', Routes);
 
 // Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 // Default route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname,'index.html'));
 });
 
 // Start the server
@@ -36,7 +36,6 @@ const { exec } = require('child_process');
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
-
-    // Open the URL in the default browser
-    open(`http://localhost:${port}`).catch(err => console.error("Error opening browser:", err));
+    exec(`start http://localhost:${port}`); // Windows
 });
+
