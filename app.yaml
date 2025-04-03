@@ -1,0 +1,8 @@
+runtime: nodejs20  # Use the latest supported Node.js runtime
+entrypoint: node server.js  # Ensure this points to your main server file
+
+handlers:
+  - url: /static
+    static_dir: public
+  - url: /.*
+    script: auto
