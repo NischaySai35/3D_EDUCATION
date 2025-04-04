@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSearchFilters();
 });
 
+const BASE_URL = "https://cobalt-howl-453213-g2.uc.r.appspot.com";
+
 /* 🌟 Create Loading Spinner */
 const loadingSpinner = document.createElement("div");
 loadingSpinner.id = "loading-spinner";
@@ -104,7 +106,7 @@ window.searchModel = searchModel;
 
 /* 🔗 Fetch Models from Backend */
 function sendToBackend(category) {
-  return fetch(`http://localhost:5000/api/category/${category}`, {
+  return fetch(`${BASE_URL}/api/category/${category}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
   })
@@ -121,7 +123,7 @@ function sendToBackend(category) {
 
 async function sendToBackendURL(modelName) {
   try {
-      const response = await fetch(`http://localhost:5000/api/getmodel/${modelName}`);
+      const response = await fetch(`${BASE_URL}/api/getmodel/${modelName}`);
       if (!response.ok) {
           throw new Error(`Failed to fetch model URL: ${response.statusText}`);
       }
