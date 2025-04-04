@@ -1,5 +1,8 @@
-runtime: nodejs20  # Use the latest supported Node.js runtime
-entrypoint: node server.js  # Ensure this points to your main server file
+runtime: nodejs20
+entrypoint: node server.js
+
+env_variables:
+  NODE_ENV: "production"
 
 handlers:
   - url: /static
