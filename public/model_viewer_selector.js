@@ -192,7 +192,9 @@ function onClick(event) {
         const partName = clickedPart.name.replace(/\d+/g, '').trim() || "Unknown Part";
 
         console.log(`Clicked on part: ${partName} of model: ${currentModelName}`);
-
+        // Show the loading spinner
+        const spinner = document.getElementById("loading-spinner-info");
+        spinner.style.display = "flex";
         // Fetch explanation from backend
         fetch(`/api/${currentModelName}/parts/${partName}/explain`)
         .then(response => response.json())
@@ -203,7 +205,8 @@ function onClick(event) {
                                      .replace(/\*(.*?)\*/g, "<i>$1</i>"); // Convert `*italic*` to `<i>italic</i>`
             document.getElementById("explanation").innerHTML = explanation;
         })
-        .catch(error => console.error("Error fetching explanation:", error));
+        .catch(error => console.error("Error fetching explanation:", error))
+        .finally(() => {spinner.style.display = "none";});
     }
 }
 

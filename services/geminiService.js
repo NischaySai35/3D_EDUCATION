@@ -1,8 +1,8 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-const generateGeminiResponse = async (prompt) => {
+export const generateGeminiResponse = async (prompt) => {
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
         
@@ -31,5 +31,3 @@ const generateGeminiResponse = async (prompt) => {
         throw new Error('Failed to generate explanation');
     }
 };
-
-module.exports = { generateGeminiResponse };

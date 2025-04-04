@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import { Storage } from '@google-cloud/storage';
+import Model from '../config/modelschema.js';
+import { generateGeminiResponse } from '../services/geminiService.js';
+
 const router = express.Router();
-const Model = require('../model');
-const { generateGeminiResponse } = require('../services/geminiService');
-const { Storage } = require('@google-cloud/storage');
-const multer = require('multer');
-const path = require('path');
 const MODELS_APIKEY = process.env.MODELS_KEYPATH;
 
 // Google Cloud Storage Configuration
@@ -81,7 +82,7 @@ router.get('/:modelName', async (req, res) => {
     }
 });
 
-//GET model url for model viewewr viewer
+// GET: Fetch model URL for model viewer
 router.get('/getmodel/:modelName', async (req, res) => {
     try {
         const { modelName } = req.params;
@@ -117,12 +118,9 @@ router.get('/category/:category', async (req, res) => {
 // GET: Fetch explanation of a part using Gemini API
 router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     try {
-        console.log("Route hit: /:modelName/parts/:partName/explain");
         const { modelName, partName } = req.params;
-        
-        console.log(`Received modelName: ${modelName}, partName: ${partName}`);
-
-        const prompt = `Explain the ${partName} of the ${modelName} in 5 points.`;
+        // Prompt for Gemini API
+        const prompt = `Explain the ${partName} of the ${modelName} in 5 points, with a simple description of its function and importance. Use simple language suitable for a 10-year-old. Include any relevant technical terms and their meanings. That's it, don't give any initial greetings or any other information.`;
         const explanation = await generateGeminiResponse(prompt);
 
         res.status(200).json({ part: partName, explanation });
@@ -132,4 +130,4 @@ router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
