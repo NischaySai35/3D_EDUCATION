@@ -3,6 +3,7 @@ entrypoint: node server.js
 
 env_variables:
   NODE_ENV: "production"
+  GEMINI_API_KEY: "AIzaSyD79FO9aTI5n0zJUbEPmPLyTbmXlgGzitg"
 
 handlers:
   - url: /static
