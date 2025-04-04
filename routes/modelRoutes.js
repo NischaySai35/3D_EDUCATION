@@ -117,12 +117,9 @@ router.get('/category/:category', async (req, res) => {
 // GET: Fetch explanation of a part using Gemini API
 router.get('/:modelName/parts/:partName/explain', async (req, res) => {
     try {
-        console.log("Route hit: /:modelName/parts/:partName/explain");
         const { modelName, partName } = req.params;
-        
-        console.log(`Received modelName: ${modelName}, partName: ${partName}`);
-
-        const prompt = `Explain the ${partName} of the ${modelName} in 5 points.`;
+        //Prompt for Gemini API
+        const prompt = `Explain the ${partName} of the ${modelName} in 5 points, with a simple description of its function and importance. Use simple language suitable for a 10-year-old. Include any relevant technical terms and their meanings. Thats it, dont give any initial greetings or any other information.`;
         const explanation = await generateGeminiResponse(prompt);
 
         res.status(200).json({ part: partName, explanation });

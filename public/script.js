@@ -1,5 +1,5 @@
-import { loadModel } from '../model_viewer_selector.js';
-
+import { loadModel } from './model_viewer_selector.js';
+console.log("Model Viewer Selector loaded successfully.");
 document.addEventListener("DOMContentLoaded", () => {
   setupSearchFilters();
 });

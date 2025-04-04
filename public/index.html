@@ -87,11 +87,54 @@
           </p>
         </div>
       </section>
+
+<!-- Upcoming Services Section -->
+<section id="upcoming-services" class="container active">
+  <h2 style="padding-top: 20px; font-size: 2em; font-weight: bold;">Upcoming Services</h2>
+  <p style="font-size: 1.2em; margin-bottom: 20px;">
+    Explore the exciting new ways to learn and interact with educational content, coming soon!
+  </p>
+  <div class="services-container">
+    <!-- Service 1 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="Augmented Reality" class="service-image">
+      <h4>Learn with Augmented Reality</h4>
+      <p>
+      Experience immersive learning by bringing 3D models into the real world using AR technology.
+      </p>
+    </div>
+    <!-- Service 2 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="3D Simulations" class="service-image">
+      <h4>Learn with 3D Simulations</h4>
+      <p>
+      Dive into interactive 3D simulations to understand complex concepts in a fun and engaging way.
+      </p>
+    </div>
+    <!-- Service 3 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="AI-Powered Learning" class="service-image">
+      <h4>AI-Powered Learning</h4>
+      <p>
+      Get personalized learning experiences with AI-driven insights and explanations tailored to your needs.
+      </p>
+    </div>
+    <!-- Service 4 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="Virtual Reality Education" class="service-image">
+      <h4>Virtual Reality Education</h4>
+      <p>
+      Step into a virtual classroom and explore educational content in a fully immersive VR environment.
+      </p>
+    </div>
+    </div>
+  </section>
     </div>
   </div>
 
   <!-- Subpage for Model Selection -->
-  <section id="model-page" class="container">
+  <div id="model-page" class="container">
+  <section>
     <br>
     <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
 
@@ -105,6 +148,32 @@
     <!-- Dynamic Model List -->
     <div id="model-list"></div>
   </section>
+  <!-- Upcoming Services Section for Model Page -->
+<section>
+  <h2 style="padding-top: 20px; font-size: 2em; font-weight: bold;">Upcoming Model Services</h2>
+  <p style="font-size: 1.2em; margin-bottom: 20px;">
+    Discover the future of 3D model creation with cutting-edge AI technologies!
+  </p>
+  <div class="services-container">
+    <!-- Service 1 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="Text-to-3D Model Generation" class="service-image">
+      <h4>Text-to-3D Model Generation</h4>
+      <p>
+        Generate 3D models directly from textual descriptions using advanced AI algorithms.
+      </p>
+    </div>
+    <!-- Service 2 -->
+    <div class="service-item">
+      <img src="./models/picsart.ico" alt="Image-to-3D Model Generation" class="service-image">
+      <h4>Image-to-3D Model Generation</h4>
+      <p>
+        Transform 2D images into fully interactive 3D models with AI-powered tools.
+      </p>
+    </div>
+  </div>
+</section>
+</div>
 
   <!-- Model Display Page -->
   <section id="display-page" class="container">
@@ -113,7 +182,10 @@
     <div id="model-display">
       <!-- Left Side: Model Information -->
       <div id="model-info">
-        <h3>Model Information</h3>
+        <div id="loading-spinner-info" style="display: none;">
+          <div class="spinner"></div>
+        </div>
+        <h3>AI Model Information</h3>
         <p id="explanation">Select a part to see its details...</p>
       </div>
 
@@ -159,8 +231,8 @@
     </div>
   </footer>
   
-  <script type="module" src="background.js"></script>
-  <script type="module" src="model_viewer_selector.js"></script>
-  <script type="module" src="script.js"></script>
+  <script type="module" src="./background.js"></script>
+  <script type="module" src="./model_viewer_selector.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
