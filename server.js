@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const connectDB = require('./db');
+const connectDB = require('./config/mongodb');
 const path = require('path');
 const open = require('open'); // Changed from await import('open')
 

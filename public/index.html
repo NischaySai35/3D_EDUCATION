@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./models/picsart.ico">
+  <title>Interactive 3D Educational Models</title>
+  <link rel="stylesheet" href="styles.css">
+
+<body>
+  <canvas id="background-canvas"></canvas>
+  <!-- Header Section -->
+  <header id="header">
+    <img src="./models/bg1.png" alt="Header Image" id="headerImage">
+  </header>
+
+  <!-- Main Page (Field Selection) -->
+  <div id="main-page" class="container active">
+    <br>
+    <h1 style="font-size: 2.5em; font-weight: bold;">Interactive 3D Educational Models</h1>
+    <p style="font-size: 1.2em;">Browse and interact with educational models across various fascinating fields</p>
+
+    <div class="main-content">
+      <!-- Search Bar on the Top -->
+      <div class="search-bar-container">
+        <h3>Search Fields</h3>
+        <div id="search-container">
+          <input 
+            type="text" 
+            id="search-field-bar" 
+            placeholder="Search for a field..." 
+            aria-label="Search for a field"
+          />
+          <button id="search-button" onclick="searchField()">Search</button>
+        </div>
+        <div id="loading" style="display: none;">Searching...</div>
+        <div id="not-found-message" style="display: none;">No field found. Please try again.</div>
+      </div>
+      <br>
+      <!-- Fields Section -->
+      <section class="field-items-container">
+        <div class="field-item" onclick="showFieldModels('biology')">
+          <div class="field-symbol">🧬</div>
+          <h4>Biology</h4>
+          <p class="field-description">
+            Explore the study of living organisms, their structure, function, growth, evolution, and distribution.
+          </p>
+        </div>
+
+        <div class="field-item" onclick="showFieldModels('technology')">
+          <div class="field-symbol">💻</div>
+          <h4>Technology</h4>
+          <p class="field-description">
+            Learn about the application of scientific knowledge for practical purposes, especially in industry.
+          </p>
+        </div>
+
+        <div class="field-item" onclick="showFieldModels('electronics')">
+          <div class="field-symbol">🔌</div>
+          <h4>Electronics</h4>
+          <p class="field-description">
+            Learn about the design and application of electronic circuits, devices, and systems.
+          </p>
+        </div>
+
+        <div class="field-item" onclick="showFieldModels('automobiles')">
+          <div class="field-symbol">🚗</div>
+          <h4>Automobiles</h4>
+          <p class="field-description">
+            Explore the world of cars, engines, and automotive design, focusing on functionality, technology, and innovation.
+          </p>
+        </div>
+
+        <div class="field-item" onclick="showFieldModels('astronomy')">
+          <div class="field-symbol">🔭</div>
+          <h4>Astronomy</h4>
+          <p class="field-description">
+            Explore the study of celestial objects, space, and the universe as a whole.
+          </p>
+        </div>
+
+        <div class="field-item">
+          <div class="field-symbol">✨</div>
+          <h4>Coming Soon</h4>
+          <p class="field-description">
+            Exciting new topics are on their way! Stay tuned for more interactive learning experiences.
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Subpage for Model Selection -->
+  <section id="model-page" class="container">
+    <br>
+    <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
+
+    <div id="model-search-container">
+      <input type="text" id="search-model-bar" placeholder="Search for a model..." />
+      <button id="search-button" onclick="searchModel()">Search</button>
+    </div>
+
+    <h2 id="model-title" style="padding-top: 20px;">Available Models</h2>
+
+    <!-- Dynamic Model List -->
+    <div id="model-list"></div>
+  </section>
+
+  <!-- Model Display Page -->
+  <section id="display-page" class="container">
+    <br>
+    <div class="back-button" onclick="backToModelPage()">Back to Models</div>
+    <div id="model-display">
+      <!-- Left Side: Model Information -->
+      <div id="model-info">
+        <h3>Model Information</h3>
+        <p id="explanation">Select a part to see its details...</p>
+      </div>
+
+      <!-- Right Side: 3D Model Interaction -->
+      <div id="model-viewer-container">
+        <canvas id="model-canvas"></canvas>
+        <div id="part-name">Hover over the parts to know more...</div>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- Footer Section -->
+  <footer id="footer">
+    <div class="footer-container">
+      <!-- Contributions -->
+      <div class="footer-section">
+        <h4>Designed By</h4>
+        <p>Nischay Sai</p>
+        <p>Rishika J R</p>
+        <p>Noti Gayatri</p>
+      </div>
+  
+      <!-- Contact Info -->
+      <div class="footer-section">
+        <h4>Contact Us</h4>
+        <p>Email: nischaysai35@gmail.com</p>
+        <p>Phone: +91 8147447343</p>
+      </div>
+  
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h4>Our Project Links</h4>
+        <ul>
+          <li><a href="#" style="text-decoration: underline;">Youtube Link</a></li>
+          <a href="https://github.com/NischaySai35/3D_EDUCATION" target="_blank" style="text-decoration: underline;">GitHub Link</a>
+          <li><a href="#" style="text-decoration: underline;">References Used</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 3D Model Viewer | Only for GDG Solution Challenge ROUND-1
+    </div>
+  </footer>
+  
+  <script type="module" src="background.js"></script>
+  <script type="module" src="model_viewer_selector.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

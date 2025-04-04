@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Model = require('../model');
+const Model = require('../config/modelschema');
 const { generateGeminiResponse } = require('../services/geminiService');
 const { Storage } = require('@google-cloud/storage');
 const multer = require('multer');
