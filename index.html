@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./models/picsart.ico">
   <title>Interactive 3D Educational Models</title>
   <link rel="stylesheet" href="styles.css">
 
 <body>
+  <canvas id="background-canvas"></canvas>
   <!-- Header Section -->
   <header id="header">
     <img src="./models/bg1.png" alt="Header Image" id="headerImage">
@@ -14,6 +16,7 @@
 
   <!-- Main Page (Field Selection) -->
   <div id="main-page" class="container active">
+    <br>
     <h1 style="font-size: 2.5em; font-weight: bold;">Interactive 3D Educational Models</h1>
     <p style="font-size: 1.2em;">Browse and interact with educational models across various fascinating fields</p>
 
@@ -33,7 +36,7 @@
         <div id="loading" style="display: none;">Searching...</div>
         <div id="not-found-message" style="display: none;">No field found. Please try again.</div>
       </div>
-
+      <br>
       <!-- Fields Section -->
       <section class="field-items-container">
         <div class="field-item" onclick="showFieldModels('biology')">
@@ -89,6 +92,7 @@
 
   <!-- Subpage for Model Selection -->
   <section id="model-page" class="container">
+    <br>
     <div class="back-button" onclick="backToMainPage()">Back to Fields</div>
 
     <div id="model-search-container">
@@ -104,6 +108,7 @@
 
   <!-- Model Display Page -->
   <section id="display-page" class="container">
+    <br>
     <div class="back-button" onclick="backToModelPage()">Back to Models</div>
     <div id="model-display">
       <!-- Left Side: Model Information -->
@@ -153,8 +158,8 @@
       &copy; 2025 3D Model Viewer | Only for GDG Solution Challenge ROUND-1
     </div>
   </footer>
-
-  <!-- Link to JavaScript files -->
+  
+  <script type="module" src="background.js"></script>
   <script type="module" src="model_viewer_selector.js"></script>
   <script type="module" src="app.js"></script>
 </body>

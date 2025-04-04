@@ -36,6 +36,16 @@ const { exec } = require('child_process');
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+<<<<<<< HEAD
     exec(`start http://localhost:${port}`); // Windows
+=======
+
+    // Open the URL in the default browser
+    exec(`start http://localhost:${port}`, (err) => {
+        if (err) {
+            console.error("Error opening browser:", err);
+        }
+    });
+>>>>>>> f7bb9ae206690c98af0860d527d35af09018e1e3
 });
 
