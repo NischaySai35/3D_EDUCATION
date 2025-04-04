@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
 
 import connectDB from './config/mongodb.js';
 import Routes from './routes/modelRoutes.js';
@@ -41,10 +40,10 @@ app.listen(port, () => {
 
   // Only open browser in development
   if (process.env.NODE_ENV !== 'production') {
-    exec(`start http://localhost:${port}`, (err) => {
-      if (err) {
+    import('open').then((open) => {
+      open.default(`http://localhost:${port}`).catch((err) => {
         console.error("Error opening browser:", err);
-      }
+      });
     });
   }
 });
