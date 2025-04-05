@@ -25,10 +25,6 @@ router.post('/upload', upload.single('modelFile'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-        console.log("File received:", req.file.originalname);
-        console.log("Model name received:", req.body.name);
-        console.log("Category received:", req.body.category);
-
         const modelName = req.body.name;
         const category = req.body.category;
         const folderName = "models"; // Change this to your desired folder

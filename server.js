@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: `http://localhost:${port}` }));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -47,4 +47,3 @@ app.listen(port, () => {
     });
   }
 });
-
