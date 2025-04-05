@@ -68,44 +68,65 @@ function initScene() {
 }
 
 export function loadModel(url, modelName) {
+    const spinner = document.getElementById("loading-spinner-model");
+    spinner.style.display = "flex"; // Show the spinner
+
     setTimeout(() => {
-    if (document.getElementById("model-viewer-container").clientWidth > 0) {
-        console.log("Took : ",time,"ms");
-        document.getElementById("explanation").innerText = "Click on a part to know more...";  
-        initScene();
-        if (model) {
-            scene.remove(model);
-            model = null;
+        if (document.getElementById("model-viewer-container").clientWidth > 0) {
+            console.log("Time to get url : ", time, "ms");
+            document.getElementById("explanation").innerText = "Click on a part to know more...";
+            initScene();
+            if (model) {
+                scene.remove(model);
+                model = null;
+            }
+
+            const loader = new GLTFLoader();
+            console.log("Load function initiated, url =", url);
+
+            // Start time measurement
+            const startTime = performance.now();
+
+            loader.load(
+                url,
+                function (gltf) {
+                    model = gltf.scene;
+                    scene.add(model);
+
+                    // End time measurement
+                    const endTime = performance.now();
+                    console.log("Time taken to load and add model: ", (endTime - startTime).toFixed(2), "ms");
+
+                    spinner.style.display = "none"; // Hide the spinner after loading
+                    currentModelName = modelName;
+                    console.log("Loaded model:", modelName);
+                    console.log("size : ", model.size);
+
+                    const bbox = new THREE.Box3().setFromObject(model);
+                    const center = bbox.getCenter(new THREE.Vector3());
+                    const size = bbox.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const fov = camera.fov * (Math.PI / 180);
+
+                    let cameraDistance = Math.abs(maxDim / (2 * Math.sin(fov / 2)));
+
+                    model.position.set(-center.x, -center.y, -center.z);
+                    console.log("maxdim is ", maxDim);
+                    const frontOffset = cameraDistance;
+                    camera.position.set(0, 0, frontOffset);
+                    controls.update();
+                },
+                undefined,
+                function (error) {
+                    console.error("Error loading model:", error);
+                    spinner.style.display = "none"; // Hide the spinner on error
+                }
+            );
+        } else {
+            time = time + 100;
+            loadModel(url, modelName); // Try again
         }
-
-        const loader = new GLTFLoader();
-        console.log("Load function initiated, url =", url);
-        loader.load(url, function (gltf) {
-            model = gltf.scene;
-            scene.add(model);
-            currentModelName = modelName;  
-            console.log("Loaded model:", modelName);
-            console.log("size : ",model.size);
-
-            const bbox = new THREE.Box3().setFromObject(model);
-            const center = bbox.getCenter(new THREE.Vector3());
-            const size = bbox.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            const fov = camera.fov * (Math.PI / 180);
-
-            let cameraDistance = Math.abs(maxDim / (2 * Math.sin(fov / 2)));
-
-            model.position.set(-center.x, -center.y, -center.z);
-            console.log("maxdim is ", maxDim);
-            const frontOffset = cameraDistance;
-            camera.position.set(0, 0, frontOffset);
-            controls.update();
-    });
-} else {
-    time = time + 100;
-    loadModel(url, modelName); // Try again
-}
-}, 100);
+    }, 100);
 }
 
 // Shader-based outline effect
