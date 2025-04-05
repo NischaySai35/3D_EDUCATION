@@ -52,13 +52,16 @@ function fadeOut(element, callback) {
   }, 50);
 }
 
-function adjustModelInfoHeight() {
-  const modelviewer = document.getElementById("model-viewer-container");
-  const modelInfo = document.getElementById("model-info");
-  const modelheight = modelviewer.offsetHeight;
-  modelInfo.style.maxHeight = `${modelheight}px`;
+const modelviewer = document.getElementById("model-viewer-container");
+const modelInfo = document.getElementById("model-info");
+
+if (modelviewer && modelInfo) {
+  const observer = new ResizeObserver(() => {
+    const modelheight = modelviewer.offsetHeight;
+    modelInfo.style.maxHeight = `${modelheight}px`;
+  });
+  observer.observe(modelviewer);
 }
-window.addEventListener("resize", adjustModelInfoHeight);
 
 /* 🔍 Live Search Filtering */
 function setupSearchFilters() {
