@@ -2,9 +2,7 @@
 
 A modern, interactive learning web app that lets users open any 3D model, hover to highlight parts, and get AI-powered explanations of the selected components — perfect for teaching, demos, and hands-on learning.
 
-![Website view](public/image.png)
-
-![Demo Snapshot](public/vid.mp4)
+[![Watch demo](./public/image.png)](./public/vid.mp4)
 
 Short description
 - Explore real-time 3D models with smooth navigation, intuitive hover-highlighting, and contextual AI explanations for any part of the model.
