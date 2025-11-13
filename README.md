@@ -65,25 +65,6 @@ http://localhost:3000
 
 ---
 
-## 🗂️ Folder Structure
-
-```
-3D_EDUCATION/
-├── public/
-│   ├── image.png
-│   ├── vid.mp4
-│   └── models/
-├── src/
-│   ├── components/
-│   ├── ai/
-│   ├── hooks/
-│   └── utils/
-├── server.js
-└── README.md
-```
-
----
-
 ## 🛠️ Tech Stack
 
 * Three.js — 3D rendering
